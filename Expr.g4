@@ -13,7 +13,11 @@ declaration
     | functionDeclaration
     ;
 
-constDeclaration: CONST IDENTIFIER EQUAL expression ';';
+constDeclaration: CONST IDENTIFIER typeIdentifier? EQUAL constExpression ';';
+constExpression
+    : (simpleExpression (('=' | '<>' | '<' | '<=' | '>' | '>=') simpleExpression)?) | stringConstant
+    ;
+
 varDeclaration: VAR IDENTIFIER COLON typeIdentifier ';';
 typeDefDeclaration: TYPE IDENTIFIER EQUAL typeSpecification ';';
 
@@ -154,7 +158,7 @@ SHL : S H L;
 SHR : S H R;
 QUOTE : '\'' ;
 CHARACTER : QUOTE CHARACTER_CHAR QUOTE ;
-STRING : QUOTE STRING_CHAR* QUOTE ;
+STRING : (DQUOTE STRING_DQUOTE_CHAR* DQUOTE) | (SQUOTE STRING_SQUOTE_CHAR* SQUOTE) ;
 THEN : T H E N;
 TO : T O;
 TRUE : T R U E;
@@ -173,7 +177,7 @@ REAL : INTEGER '.' INTEGER
 | INTEGER ('e' | 'E') ('+' | '-')? INTEGER
 | INTEGER '.' INTEGER ('e' | 'E') ('+' | '-')? INTEGER
 ;
-IDENTIFIER : [a-zA-Z][a-zA-Z0-9]* ;
+IDENTIFIER : [a-zA-Z_][a-zA-Z0-9_]* ;
 PLUSOP : '+';
 MINUSOP : '-';
 DIVOP : '/';
@@ -203,6 +207,9 @@ RCOMMENT : '*)';
 
 fragment CHARACTER_CHAR : ~('\'') ; // any non-quote character
 
-fragment STRING_CHAR : QUOTE QUOTE // two consecutive quotes
-| ~('\'') // any non-quote character
-;
+fragment STRING_DQUOTE_CHAR : SQUOTE | ~('"') ; // any non-double-quote character
+fragment STRING_SQUOTE_CHAR : DQUOTE | ~('\'') ; // any non-single-quote character
+
+fragment DQUOTE : '"';
+fragment SQUOTE : '\'';
+
