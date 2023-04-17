@@ -1,0 +1,76 @@
+
+// Generated from Expr.g4 by ANTLR 4.12.0
+
+#pragma once
+
+
+#include "antlr4-runtime.h"
+#include "ExprParser.h"
+
+
+
+/**
+ * This class defines an abstract visitor for a parse tree
+ * produced by ExprParser.
+ */
+class  ExprVisitor : public antlr4::tree::AbstractParseTreeVisitor {
+public:
+
+  /**
+   * Visit parse trees produced by ExprParser.
+   */
+    virtual std::any visitProg(ExprParser::ProgContext *context) = 0;
+
+    virtual std::any visitComment(ExprParser::CommentContext *context) = 0;
+
+    virtual std::any visitProgramDeclaration(ExprParser::ProgramDeclarationContext *context) = 0;
+
+    virtual std::any visitDeclaration(ExprParser::DeclarationContext *context) = 0;
+
+    virtual std::any visitConstDeclaration(ExprParser::ConstDeclarationContext *context) = 0;
+
+    virtual std::any visitVarDeclaration(ExprParser::VarDeclarationContext *context) = 0;
+
+    virtual std::any visitTypeDefDeclaration(ExprParser::TypeDefDeclarationContext *context) = 0;
+
+    virtual std::any visitTypeIdentifier(ExprParser::TypeIdentifierContext *context) = 0;
+
+    virtual std::any visitTypeSpecification(ExprParser::TypeSpecificationContext *context) = 0;
+
+    virtual std::any visitSubrange(ExprParser::SubrangeContext *context) = 0;
+
+    virtual std::any visitFunctionDeclaration(ExprParser::FunctionDeclarationContext *context) = 0;
+
+    virtual std::any visitParamDeclaration(ExprParser::ParamDeclarationContext *context) = 0;
+
+    virtual std::any visitStatement(ExprParser::StatementContext *context) = 0;
+
+    virtual std::any visitAssignment(ExprParser::AssignmentContext *context) = 0;
+
+    virtual std::any visitWriteln(ExprParser::WritelnContext *context) = 0;
+
+    virtual std::any visitForStatement(ExprParser::ForStatementContext *context) = 0;
+
+    virtual std::any visitCompoundStatement(ExprParser::CompoundStatementContext *context) = 0;
+
+    virtual std::any visitVariable(ExprParser::VariableContext *context) = 0;
+
+    virtual std::any visitArrayIndexing(ExprParser::ArrayIndexingContext *context) = 0;
+
+    virtual std::any visitExpression(ExprParser::ExpressionContext *context) = 0;
+
+    virtual std::any visitSimpleExpression(ExprParser::SimpleExpressionContext *context) = 0;
+
+    virtual std::any visitTerm(ExprParser::TermContext *context) = 0;
+
+    virtual std::any visitFactor(ExprParser::FactorContext *context) = 0;
+
+    virtual std::any visitNumber(ExprParser::NumberContext *context) = 0;
+
+    virtual std::any visitCharacterConstant(ExprParser::CharacterConstantContext *context) = 0;
+
+    virtual std::any visitStringConstant(ExprParser::StringConstantContext *context) = 0;
+
+
+};
+
