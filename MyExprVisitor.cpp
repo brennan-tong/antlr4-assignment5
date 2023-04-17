@@ -16,7 +16,7 @@ antlrcpp::Any MyExprVisitor::visitDeclaration(ExprParser::DeclarationContext *co
 
 antlrcpp::Any MyExprVisitor::visitConstDeclaration(ExprParser::ConstDeclarationContext *context) {
     std::string identifier = context->IDENTIFIER()->getText();
-    antlrcpp::Any value = visit(context->expression());
+    antlrcpp::Any value = visit(context->constExpression());
     // Check if the constant is already declared in the current scope
     if (symbolTable.isDeclaredInCurrentScope(identifier)) {
         std::cerr << "Error: Constant " << identifier << " is already declared in the current scope.\n";
