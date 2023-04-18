@@ -3,6 +3,8 @@
 
 #include "ExprBaseVisitor.h"
 #include "SymbolTable.h"
+#include "ExprParser.h"
+#include "TypedefStructure.h"
 
 class MyExprVisitor : public ExprBaseVisitor {
 public:
@@ -14,7 +16,13 @@ public:
     antlrcpp::Any visitVarDeclaration(ExprParser::VarDeclarationContext *context) override;
     antlrcpp::Any visitTypeDefDeclaration(ExprParser::TypeDefDeclarationContext *context) override;
     antlrcpp::Any visitFunctionDeclaration(ExprParser::FunctionDeclarationContext *context) override;
+    antlrcpp::Any visitTypeSpecification(ExprParser::TypeSpecificationContext *context) override;
+    antlrcpp::Any visitArrayIndexing(ExprParser::ArrayIndexingContext *ctx) override;
+
+
     void printSymbolTables();
+    void printParseTree(antlr4::tree::ParseTree *node, ExprParser *parser, std::ostream &output, int depth = 0);
+
 
 private:
     SymbolTable symbolTable;
