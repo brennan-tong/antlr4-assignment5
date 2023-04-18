@@ -1,6 +1,6 @@
 grammar Expr;
 
-prog: (declaration | programDeclaration | statement | comment)* EOF;
+prog: (declaration | programDeclaration | statement | comment)*? EOF;
 
 comment: LCOMMENT .* RCOMMENT?;
 
@@ -13,21 +13,33 @@ declaration
     | functionDeclaration
     ;
 
-constDeclaration: CONST IDENTIFIER typeIdentifier? EQUAL constExpression ';';
+constDeclaration: CONST (IDENTIFIER EQUAL constExpression ';')*;
 constExpression
-    : (simpleExpression (('=' | '<>' | '<' | '<=' | '>' | '>=') simpleExpression)?) | stringConstant
+    : (simpleExpression ((EQUAL | '<>' | '<' | '<=' | '>' | '>=') simpleExpression)?) | stringConstant
     ;
 
-varDeclaration: VAR IDENTIFIER COLON typeIdentifier ';';
-typeDefDeclaration: TYPE IDENTIFIER EQUAL typeSpecification ';';
+varDeclaration: VAR (varDeclarationList)+;
+varDeclarationList: varIdentifierList COLON typeIdentifier ';';
+varIdentifierList: IDENTIFIER (',' IDENTIFIER)*;
+typeDefDeclaration: TYPE typeDefList;
+typeDefList: (typeDefElement)+;
+typeDefElement: IDENTIFIER EQUAL (typeSpecification | simpleType) ';';
 
 typeIdentifier: IDENTIFIER;
 typeSpecification
     : ARRAY LBRACKET subrange RBRACKET OF typeIdentifier
-    | subrange
+    | ARRAY LBRACKET subrange RBRACKET OF ARRAY LBRACKET subrange RBRACKET OF typeIdentifier
+    | ARRAY LBRACKET subrange RBRACKET OF ARRAY LBRACKET subrange RBRACKET OF ARRAY LBRACKET subrange RBRACKET OF typeIdentifier
+    | simpleType
+    | RECORD fieldList END
     ;
+simpleType: IDENTIFIER | subrange;
 
-subrange: IDENTIFIER EQUAL expression RANGE expression;
+
+colorList: IDENTIFIER (',' IDENTIFIER)*;
+fieldList: (IDENTIFIER (',' IDENTIFIER)* COLON typeIdentifier ';')+;
+
+subrange: expression RANGE expression;
 
 functionDeclaration
     : FUNCTION IDENTIFIER '(' (paramDeclaration (',' paramDeclaration)*)? ')' COLON typeIdentifier ';'
@@ -50,10 +62,10 @@ assignment: variable ASSIGN expression ';';
 writeln: WRITELN LPAREN (expression (COMMA expression)*)? RPAREN ';';
 
 forStatement: FOR IDENTIFIER ASSIGN expression TO expression DO statement;
-compoundStatement: BEGIN statement* END;
+compoundStatement: BEGIN statement* END ';';
 
 variable: IDENTIFIER;
-arrayIndexing: variable LBRACKET expression RBRACKET;
+arrayIndexing: variable LBRACKET expression RBRACKET (LBRACKET expression RBRACKET)?;
 
 expression
     : simpleExpression (('=' | '<>' | '<' | '<=' | '>' | '>=') simpleExpression)*
@@ -212,4 +224,3 @@ fragment STRING_SQUOTE_CHAR : DQUOTE | ~('\'') ; // any non-single-quote charact
 
 fragment DQUOTE : '"';
 fragment SQUOTE : '\'';
-
