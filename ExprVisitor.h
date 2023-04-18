@@ -29,13 +29,29 @@ public:
 
     virtual std::any visitConstDeclaration(ExprParser::ConstDeclarationContext *context) = 0;
 
+    virtual std::any visitConstExpression(ExprParser::ConstExpressionContext *context) = 0;
+
     virtual std::any visitVarDeclaration(ExprParser::VarDeclarationContext *context) = 0;
 
+    virtual std::any visitVarDeclarationList(ExprParser::VarDeclarationListContext *context) = 0;
+
+    virtual std::any visitVarIdentifierList(ExprParser::VarIdentifierListContext *context) = 0;
+
     virtual std::any visitTypeDefDeclaration(ExprParser::TypeDefDeclarationContext *context) = 0;
+
+    virtual std::any visitTypeDefList(ExprParser::TypeDefListContext *context) = 0;
+
+    virtual std::any visitTypeDefElement(ExprParser::TypeDefElementContext *context) = 0;
 
     virtual std::any visitTypeIdentifier(ExprParser::TypeIdentifierContext *context) = 0;
 
     virtual std::any visitTypeSpecification(ExprParser::TypeSpecificationContext *context) = 0;
+
+    virtual std::any visitSimpleType(ExprParser::SimpleTypeContext *context) = 0;
+
+    virtual std::any visitColorList(ExprParser::ColorListContext *context) = 0;
+
+    virtual std::any visitFieldList(ExprParser::FieldListContext *context) = 0;
 
     virtual std::any visitSubrange(ExprParser::SubrangeContext *context) = 0;
 
