@@ -13,7 +13,7 @@ void SymbolTable::popScope() {
 }
 
 void SymbolTable::addConstant(const std::string &identifier, const antlrcpp::Any &value) {
-    SymbolTableEntry entry = {identifier, IdentifierKind::CONSTANT};
+    SymbolTableEntry entry = {identifier, IdentifierKind::CONSTANT, value}; // Set the value field
     scopes.top()[identifier] = entry;
 }
 
@@ -36,34 +36,42 @@ bool SymbolTable::isDeclaredInCurrentScope(const std::string &identifier) const 
     return scopes.top().find(identifier) != scopes.top().end();
 }
 
-void SymbolTable::print() const {
+// SymbolTable.cpp
+void SymbolTable::print(std::ostream &os) const {
+
     int scopeLevel = 0;
     std::stack<std::unordered_map<std::string, SymbolTableEntry>> tempScopes = scopes;
+    os << "Number of scopes: " << tempScopes.size() << std::endl;
+
     while (!tempScopes.empty()) {
+    	os << "In While Loop";
+
         const auto& scope = tempScopes.top();
-        std::cout << "Scope Level: " << scopeLevel << std::endl;
+        os << "Scope Level: " << scopeLevel << std::endl;
         for (const auto& entry : scope) {
-            std::cout << "Identifier name: " << entry.first << std::endl;
-            std::cout << "Identifier kind: ";
+            os << "Identifier name: " << entry.first << std::endl;
+            os << "Identifier kind: ";
 
             switch (entry.second.kind) {
                 case IdentifierKind::VARIABLE:
-                    std::cout << "variable";
+                    os << "variable";
                     break;
                 case IdentifierKind::CONSTANT:
-                    std::cout << "constant";
+                    os << "constant";
+                    os << "\nValue: " << std::any_cast<double>(entry.second.value); // Print the constant value
                     break;
                 case IdentifierKind::TYPEDEF:
-                    std::cout << "typedef";
+                    os << "typedef";
                     break;
                 case IdentifierKind::FUNCTION:
-                    std::cout << "function";
+                    os << "function";
                     break;
             }
-            std::cout << std::endl << std::endl;
+            os << std::endl << std::endl;
         }
         tempScopes.pop();
         ++scopeLevel;
     }
 }
+
 
