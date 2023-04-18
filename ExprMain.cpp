@@ -23,10 +23,10 @@ std::string get_label(int);
    1. Outputs Parse Tree
    2. Outputs Symbol Table and scoping level
    - Identifier name
-   - Identifier kind 
-   3. Each typedef 
+   - Identifier kind
+   3. Each typedef
    - scaler type
-   - array: element type, element count, index type 
+   - array: element type, element count, index type
 */
 int main() {
   std::string inputFileName = "test-in.txt";
@@ -48,11 +48,14 @@ int main() {
 
   // Output parse tree
   std::ofstream parseTreeOutput("test-out.txt");
-  parseTreeOutput << tree->toStringTree(&parser) << std::endl;
+  visitor.printParseTree(tree, &parser, parseTreeOutput);
   parseTreeOutput.close();
 
   // Output symbol tables and type definitions
-  visitor.printSymbolTables();
+//  std::string symbolTablesStr = visitor.printSymbolTables();
+//  std::cout << symbolTablesStr;
+
+  return 0;
 }
 
 std::string get_label(int x) {
@@ -187,6 +190,7 @@ std::string get_label(int x) {
     break;
   case 43:
     temp = "PROGRAM";
+    break;
   case 44:
     temp = "PROGRAM";
     break;
