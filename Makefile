@@ -10,9 +10,9 @@ CPPFLAGS=-std=c++20\
 	 -D_FORTIFY_SOURCE=2\
 	 -fsanitize=bounds
 
-all: scanner
+all: parser
 
-scanner: $(OBJ_FILES)
+parser: $(OBJ_FILES)
 	$(CPP) $(CPPFLAGS) -o $@ $^  \
 		-L$(ANTLR4_CPP_LIB_DIR) \
 		-I$(ANTLR4_CPP_RUNTIME_DIR) \
@@ -22,4 +22,4 @@ scanner: $(OBJ_FILES)
 	$(CPP) $(CPPFLAGS) -c -o $@ $<  -I$(ANTLR4_CPP_RUNTIME_DIR)
 
 clean:
-	rm -f *.o scanner *~
+	rm -f *.o parser *~
