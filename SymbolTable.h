@@ -6,15 +6,16 @@
 #include <unordered_map>
 #include <string>
 #include <stack>
+#include "TypedefStructure.h"
+#include <ostream>
 
 enum class IdentifierKind { VARIABLE, CONSTANT, TYPEDEF, FUNCTION };
 
 struct SymbolTableEntry {
     std::string identifier;
     IdentifierKind kind;
+    antlrcpp::Any value;
 };
-
-using Typedef = std::string;
 
 class SymbolTable {
 public:
@@ -29,8 +30,7 @@ public:
     void addFunction(const std::string &identifier, const std::string &returnType);
 
     bool isDeclaredInCurrentScope(const std::string &identifier) const;
-    void print() const;
-
+    void print(std::ostream &os = std::cout) const;
 private:
     std::stack<std::unordered_map<std::string, SymbolTableEntry>> scopes;
 };
