@@ -35,11 +35,31 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitConstExpression(ExprParser::ConstExpressionContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitVarDeclaration(ExprParser::VarDeclarationContext *ctx) override {
     return visitChildren(ctx);
   }
 
+  virtual std::any visitVarDeclarationList(ExprParser::VarDeclarationListContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitVarIdentifierList(ExprParser::VarIdentifierListContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitTypeDefDeclaration(ExprParser::TypeDefDeclarationContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitTypeDefList(ExprParser::TypeDefListContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitTypeDefElement(ExprParser::TypeDefElementContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -48,6 +68,18 @@ public:
   }
 
   virtual std::any visitTypeSpecification(ExprParser::TypeSpecificationContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitSimpleType(ExprParser::SimpleTypeContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitColorList(ExprParser::ColorListContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitFieldList(ExprParser::FieldListContext *ctx) override {
     return visitChildren(ctx);
   }
 
