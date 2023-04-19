@@ -1,10 +1,11 @@
 grammar Expr;
 
-prog: (declaration | programDeclaration | statement | comment)*? EOF;
+prog: (declaration | programDeclaration | comment)* BEGIN (statement | comment)* END comment? '.' comment? EOF;
 
-comment: LCOMMENT .* RCOMMENT?;
 
-programDeclaration: PROGRAM IDENTIFIER '(' (IDENTIFIER (',' IDENTIFIER)*)? ')' ';';
+comment: COMMENT;
+
+programDeclaration: PROGRAM IDENTIFIER ('(' (IDENTIFIER (',' IDENTIFIER)*)? ')')? ';';
 
 declaration
     : constDeclaration
@@ -13,9 +14,11 @@ declaration
     | functionDeclaration
     ;
 
-constDeclaration: CONST (IDENTIFIER EQUAL constExpression ';')*;
+constDeclaration: CONST constAssignmentList;
+constAssignmentList: (comment? IDENTIFIER EQUAL (constExpression | stringConstant) (comment? ';' comment? IDENTIFIER EQUAL (constExpression | stringConstant))* comment? ';')?;
+
 constExpression
-    : (simpleExpression ((EQUAL | '<>' | '<' | '<=' | '>' | '>=') simpleExpression)?) | stringConstant
+    : simpleExpression ((EQUAL | '<>' | '<' | '<=' | '>' | '>=') simpleExpression)?
     ;
 
 varDeclaration: VAR (varDeclarationList)+;
@@ -27,17 +30,15 @@ typeDefElement: IDENTIFIER EQUAL (typeSpecification | simpleType) ';';
 
 typeIdentifier: IDENTIFIER;
 typeSpecification
-    : ARRAY LBRACKET subrange RBRACKET OF typeIdentifier
+    : ARRAY LBRACKET subrange (COMMA subrange)? RBRACKET OF typeIdentifier
     | ARRAY LBRACKET subrange RBRACKET OF ARRAY LBRACKET subrange RBRACKET OF typeIdentifier
     | ARRAY LBRACKET subrange RBRACKET OF ARRAY LBRACKET subrange RBRACKET OF ARRAY LBRACKET subrange RBRACKET OF typeIdentifier
     | simpleType
-    | RECORD fieldList END
     ;
-simpleType: IDENTIFIER | subrange;
 
+simpleType: IDENTIFIER | subrange | enumeratedType;
+enumeratedType: LPAREN IDENTIFIER (COMMA IDENTIFIER)* RPAREN;
 
-colorList: IDENTIFIER (',' IDENTIFIER)*;
-fieldList: (IDENTIFIER (',' IDENTIFIER)* COLON typeIdentifier ';')+;
 
 subrange: expression RANGE expression;
 
@@ -49,23 +50,40 @@ functionDeclaration
       END ';'
     ;
 
-paramDeclaration: IDENTIFIER COLON typeIdentifier;
+paramDeclaration: paramIdentifierList COLON typeIdentifier;
+paramIdentifierList: IDENTIFIER (',' IDENTIFIER)*;
 
 statement
     : assignment
     | writeln
     | forStatement
     | compoundStatement
+    | ifStatement
+    | comment
     ;
 
-assignment: variable ASSIGN expression ';';
-writeln: WRITELN LPAREN (expression (COMMA expression)*)? RPAREN ';';
+assignment: (arrayIndexing | variable) ASSIGN expression ';';
+writeln: WRITELN LPAREN (expression ((',' | ':') expression)*)? RPAREN ';';
 
-forStatement: FOR IDENTIFIER ASSIGN expression TO expression DO statement;
-compoundStatement: BEGIN statement* END ';';
+forStatement: FOR IDENTIFIER ASSIGN expression TO expression DO compoundStatement;
+compoundStatement: BEGIN (comment | statement)* END comment? ';';
+
+
+ifStatement: IF expression THEN statement_or_comment (ELSE statement_or_comment)?;
+
+statement_or_comment
+    : statement_without_semicolon
+    | statement
+    | comment
+    ;
+
+statement_without_semicolon: assignment_without_semicolon | writeln | forStatement | compoundStatement | ifStatement;
+assignment_without_semicolon: (arrayIndexing | variable) ASSIGN expression;
 
 variable: IDENTIFIER;
-arrayIndexing: variable LBRACKET expression RBRACKET (LBRACKET expression RBRACKET)?;
+functionCall: IDENTIFIER LPAREN (expression (COMMA expression)*)? RPAREN;
+
+arrayIndexing: variable LBRACKET expression (COMMA expression)? RBRACKET;
 
 expression
     : simpleExpression (('=' | '<>' | '<' | '<=' | '>' | '>=') simpleExpression)*
@@ -76,7 +94,7 @@ simpleExpression
     ;
 
 term
-    : factor (('*' | '/' | MOD) factor)*
+    : factor (('*' | '/' | DIV | MOD) factor)*
     ;
 
 factor
@@ -86,12 +104,17 @@ factor
     | number
     | characterConstant
     | stringConstant
+    | functionCall
     | variable
+    | TRUE
+    | FALSE
     ;
 
 number: INTEGER | REAL;
 characterConstant: CHARACTER;
 stringConstant: STRING;
+
+COMMENT : LCOMMENT .*? RCOMMENT;
 
 fragment A : ('a' | 'A') ;
 fragment B : ('b' | 'B') ;
@@ -140,7 +163,7 @@ DIV : D I V;
 DO : D O;
 DOWNTO: D O W N T O;
 ELSE : E L S E;
-END : E N D;
+END : ( 'e' | 'E' ) ( 'n' | 'N' ) ( 'd' | 'D' );
 FALSE : F A L S E;
 FILE : F I L E;
 FOR : F O R;
