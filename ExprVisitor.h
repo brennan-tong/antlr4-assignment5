@@ -29,6 +29,8 @@ public:
 
     virtual std::any visitConstDeclaration(ExprParser::ConstDeclarationContext *context) = 0;
 
+    virtual std::any visitConstAssignmentList(ExprParser::ConstAssignmentListContext *context) = 0;
+
     virtual std::any visitConstExpression(ExprParser::ConstExpressionContext *context) = 0;
 
     virtual std::any visitVarDeclaration(ExprParser::VarDeclarationContext *context) = 0;
@@ -49,15 +51,15 @@ public:
 
     virtual std::any visitSimpleType(ExprParser::SimpleTypeContext *context) = 0;
 
-    virtual std::any visitColorList(ExprParser::ColorListContext *context) = 0;
-
-    virtual std::any visitFieldList(ExprParser::FieldListContext *context) = 0;
+    virtual std::any visitEnumeratedType(ExprParser::EnumeratedTypeContext *context) = 0;
 
     virtual std::any visitSubrange(ExprParser::SubrangeContext *context) = 0;
 
     virtual std::any visitFunctionDeclaration(ExprParser::FunctionDeclarationContext *context) = 0;
 
     virtual std::any visitParamDeclaration(ExprParser::ParamDeclarationContext *context) = 0;
+
+    virtual std::any visitParamIdentifierList(ExprParser::ParamIdentifierListContext *context) = 0;
 
     virtual std::any visitStatement(ExprParser::StatementContext *context) = 0;
 
@@ -69,7 +71,17 @@ public:
 
     virtual std::any visitCompoundStatement(ExprParser::CompoundStatementContext *context) = 0;
 
+    virtual std::any visitIfStatement(ExprParser::IfStatementContext *context) = 0;
+
+    virtual std::any visitStatement_or_comment(ExprParser::Statement_or_commentContext *context) = 0;
+
+    virtual std::any visitStatement_without_semicolon(ExprParser::Statement_without_semicolonContext *context) = 0;
+
+    virtual std::any visitAssignment_without_semicolon(ExprParser::Assignment_without_semicolonContext *context) = 0;
+
     virtual std::any visitVariable(ExprParser::VariableContext *context) = 0;
+
+    virtual std::any visitFunctionCall(ExprParser::FunctionCallContext *context) = 0;
 
     virtual std::any visitArrayIndexing(ExprParser::ArrayIndexingContext *context) = 0;
 
