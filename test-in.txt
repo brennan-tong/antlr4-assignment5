@@ -1,13 +1,59 @@
-program hello(output); 
+program SampleProgram;
 
-(* Comment *)
+const
+    PI = 3.14159;
+    E = 2.718;
+    GREETING = 'Hello, world!';
 
-VAR
-   i := integer; 
+type
+    TInteger = Integer;
+    TReal = Real;
+    TBoolean = Boolean;
+    TIntegerArray = array[1..10] of TInteger;
+    TMatrix = array[1..3, 1..3] of TReal;
+    TArrayOfArrays = array[1..2] of TIntegerArray;
 
-BEGIN (hello) 
-   FOR i := 1 TO 10 BEGIN 
-      writeln('Hello, World'); 
-   END; 
-END (hello); 
+var
+    x: TInteger;
+    y: TReal;
+    isTrue: TBoolean;
+    intArray: TIntegerArray;
+    matrix: TMatrix;
+    arrayOfArrays: TArrayOfArrays;
 
+function Add(a, b: TInteger): TInteger;
+begin
+    Add := a + b;
+end;
+
+function Subtract(a, b: TInteger): TInteger;
+begin
+    Subtract := a - b;
+end;
+
+function Multiply(a, b: TInteger): TInteger;
+begin
+    Multiply := a * b;
+end;
+
+function Divide(a, b: TInteger): TReal;
+begin
+	if b <> 0 then
+	    Divide := a / b
+	else
+	    Divide := 0;
+end;
+
+begin
+    x := 5;
+    y := 3.14;
+    isTrue := True;
+    intArray[1] := 42;
+    matrix[1, 1] := 1.0;
+    arrayOfArrays[1] := intArray;
+    WriteLn(GREETING);
+    WriteLn('Add: ', Add(x, 7));
+    WriteLn('Subtract: ', Subtract(x, 3));
+    WriteLn('Multiply: ', Multiply(x, 2));
+    WriteLn('Divide: ', Divide(x, 3):0:2);
+end.
