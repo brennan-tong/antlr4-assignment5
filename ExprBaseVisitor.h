@@ -35,6 +35,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitConstAssignmentList(ExprParser::ConstAssignmentListContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitConstExpression(ExprParser::ConstExpressionContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -75,11 +79,7 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual std::any visitColorList(ExprParser::ColorListContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual std::any visitFieldList(ExprParser::FieldListContext *ctx) override {
+  virtual std::any visitEnumeratedType(ExprParser::EnumeratedTypeContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -92,6 +92,10 @@ public:
   }
 
   virtual std::any visitParamDeclaration(ExprParser::ParamDeclarationContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitParamIdentifierList(ExprParser::ParamIdentifierListContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -115,7 +119,27 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitIfStatement(ExprParser::IfStatementContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitStatement_or_comment(ExprParser::Statement_or_commentContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitStatement_without_semicolon(ExprParser::Statement_without_semicolonContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitAssignment_without_semicolon(ExprParser::Assignment_without_semicolonContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitVariable(ExprParser::VariableContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitFunctionCall(ExprParser::FunctionCallContext *ctx) override {
     return visitChildren(ctx);
   }
 
