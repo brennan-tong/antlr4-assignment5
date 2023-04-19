@@ -24,10 +24,10 @@ antlrcpp::Any MyExprVisitor::visitArrayIndexing(ExprParser::ArrayIndexingContext
 }
 
 antlrcpp::Any MyExprVisitor::visitConstDeclaration(ExprParser::ConstDeclarationContext *context) {
-    size_t numDeclarations = context->IDENTIFIER().size();
+	size_t numDeclarations = context->constAssignmentList()->IDENTIFIER().size();
     for (size_t i = 0; i < numDeclarations; ++i) {
-        std::string identifier = context->IDENTIFIER(i)->getText();
-        antlrcpp::Any value = visit(context->constExpression(i));
+    	std::string identifier = context->constAssignmentList()->IDENTIFIER(i)->getText();
+    	antlrcpp::Any value = visit(context->constAssignmentList()->constExpression(i));
         // Check if the constant is already declared in the current scope
         if (symbolTable.isDeclaredInCurrentScope(identifier)) {
             std::cerr << "Error: Constant " << identifier << " is already declared in the current scope.\n";
