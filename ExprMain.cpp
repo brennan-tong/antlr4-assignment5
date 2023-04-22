@@ -51,8 +51,4 @@ int main() {
   visitor.printParseTree(tree, &parser, parseTreeOutput);
   parseTreeOutput.close();
 
-  // Output symbol tables and type definitions
-//  std::string symbolTablesStr = visitor.printSymbolTables();
-//  std::cout << symbolTablesStr;
 }
-
