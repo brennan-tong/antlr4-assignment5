@@ -6,10 +6,21 @@ MyExprVisitor::MyExprVisitor() : symbolTable() {}
 
 antlrcpp::Any MyExprVisitor::visitProg(ExprParser::ProgContext *context) {
     symbolTable.pushScope();
-    visitChildren(context);
+
+    std::string programIdentifier = context->programDeclaration().at(0)->IDENTIFIER().at(0)->getText();
+    symbolTable.addProgram(programIdentifier);
+
+    for (auto declaration : context->declaration()) {
+        visit(declaration);
+    }
+
+    symbolTable.print();
     symbolTable.popScope();
+
     return nullptr;
 }
+
+
 
 antlrcpp::Any MyExprVisitor::visitDeclaration(ExprParser::DeclarationContext *context) {
     return visitChildren(context);
@@ -24,16 +35,11 @@ antlrcpp::Any MyExprVisitor::visitArrayIndexing(ExprParser::ArrayIndexingContext
 }
 
 antlrcpp::Any MyExprVisitor::visitConstDeclaration(ExprParser::ConstDeclarationContext *context) {
-	size_t numDeclarations = context->constAssignmentList()->IDENTIFIER().size();
+    size_t numDeclarations = context->constAssignmentList()->IDENTIFIER().size();
     for (size_t i = 0; i < numDeclarations; ++i) {
-    	std::string identifier = context->constAssignmentList()->IDENTIFIER(i)->getText();
-    	antlrcpp::Any value = visit(context->constAssignmentList()->constExpression(i));
-        // Check if the constant is already declared in the current scope
-        if (symbolTable.isDeclaredInCurrentScope(identifier)) {
-            std::cerr << "Error: Constant " << identifier << " is already declared in the current scope.\n";
-        } else {
-            symbolTable.addConstant(identifier, value);
-        }
+        std::string identifier = context->constAssignmentList()->IDENTIFIER(i)->getText();
+        antlrcpp::Any value = visit(context->constAssignmentList()->constExpression(i));
+        symbolTable.addConstant(identifier, std::move(value));
     }
     return nullptr;
 }
@@ -58,21 +64,15 @@ antlrcpp::Any MyExprVisitor::visitVarDeclaration(ExprParser::VarDeclarationConte
 antlrcpp::Any MyExprVisitor::visitTypeDefDeclaration(ExprParser::TypeDefDeclarationContext *context) {
     for (auto typeDefElemCtx : context->typeDefList()->typeDefElement()) {
         std::string identifier = typeDefElemCtx->IDENTIFIER()->getText();
-        antlrcpp::Any typeDefAny = visit(typeDefElemCtx->typeSpecification());
-
-        if (typeDefAny.type() == typeid(Typedef)) {
-            Typedef typeDef = std::any_cast<Typedef>(typeDefAny);
-            // Check if the typedef is already declared in the current scope
-            if (symbolTable.isDeclaredInCurrentScope(identifier)) {
-                std::cerr << "Error: Typedef " << identifier << " is already declared in the current scope.\n";
-            } else {
-                symbolTable.addTypedef(identifier, typeDef);
-            }
+        std::string type = typeDefElemCtx->typeSpecification()->getText();
+        if (symbolTable.isDeclaredInCurrentScope(identifier)) {
+            std::cerr << "Error: Typedef " << identifier << " is already declared in the current scope.\n";
+        } else {
+            symbolTable.addTypedef(identifier, type);
         }
     }
     return nullptr;
 }
-
 
 
 antlrcpp::Any MyExprVisitor::visitFunctionDeclaration(ExprParser::FunctionDeclarationContext *context) {
@@ -90,8 +90,13 @@ antlrcpp::Any MyExprVisitor::visitFunctionDeclaration(ExprParser::FunctionDeclar
     visitChildren(context);
     symbolTable.popScope();
 
+    // Print the symbol table after popping the function scope
+    symbolTable.print();
+
     return nullptr;
 }
+
+
 
 antlrcpp::Any MyExprVisitor::visitTypeSpecification(ExprParser::TypeSpecificationContext *ctx) {
     if (ctx->ARRAY().size() == 1) {
@@ -117,7 +122,7 @@ antlrcpp::Any MyExprVisitor::visitTypeSpecification(ExprParser::TypeSpecificatio
 
 
 void MyExprVisitor::printSymbolTables() {
-symbolTable.print();
+	symbolTable.print();
 }
 
 void MyExprVisitor::printParseTree(antlr4::tree::ParseTree *node, ExprParser *parser, std::ostream &output, int depth) {
