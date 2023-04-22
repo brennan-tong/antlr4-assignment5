@@ -29,6 +29,8 @@ public:
     void addProgram(const std::string &identifier);
     void print(std::ostream &os = std::cout) const;
 
+    bool isDeclared(const std::string& identifier) const;
+
 private:
     std::stack<std::map<std::string, SymbolTableEntry>> scopes;
     std::stack<std::vector<std::string>> orderedIdentifiers;
