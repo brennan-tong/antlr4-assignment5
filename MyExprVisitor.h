@@ -18,6 +18,10 @@ public:
     antlrcpp::Any visitFunctionDeclaration(ExprParser::FunctionDeclarationContext *context) override;
     antlrcpp::Any visitTypeSpecification(ExprParser::TypeSpecificationContext *context) override;
     antlrcpp::Any visitArrayIndexing(ExprParser::ArrayIndexingContext *ctx) override;
+    antlrcpp::Any visitVariable(ExprParser::VariableContext *ctx) override;
+    antlrcpp::Any visitAssignment(ExprParser::AssignmentContext *ctx) override;
+
+
 
     void printSymbolTables();
     void printParseTree(antlr4::tree::ParseTree *node, ExprParser *parser, std::ostream &output, int depth = 0);
