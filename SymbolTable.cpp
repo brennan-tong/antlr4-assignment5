@@ -1,6 +1,8 @@
 #include "SymbolTable.h"
 #include <string>
 #include <iomanip>
+#include <map>
+
 
 SymbolTable::SymbolTable() {}
 
@@ -54,6 +56,16 @@ void SymbolTable::addProgram(const std::string &identifier) {
     scopes.top()[identifier] = entry;
     orderedIdentifiers.top().push_back(identifier);
 }
+
+bool SymbolTable::isDeclared(const std::string& identifier) const {
+    for (auto it = scopes.top().cbegin(); it != scopes.top().cend(); ++it) {
+        if (it->first == identifier) {
+            return true;
+        }
+    }
+    return false;
+}
+
 
 void SymbolTable::print(std::ostream &os) const {
     int scopeLevel = 0;
