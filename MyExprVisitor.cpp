@@ -14,12 +14,16 @@ antlrcpp::Any MyExprVisitor::visitProg(ExprParser::ProgContext *context) {
         visit(declaration);
     }
 
+    // Check for undeclared variables after adding declarations to the symbol table.
+    for (auto statement : context->statement()) {
+        visit(statement);
+    }
+
     symbolTable.print();
     symbolTable.popScope();
 
     return nullptr;
 }
-
 
 
 antlrcpp::Any MyExprVisitor::visitDeclaration(ExprParser::DeclarationContext *context) {
@@ -29,7 +33,20 @@ antlrcpp::Any MyExprVisitor::visitDeclaration(ExprParser::DeclarationContext *co
 antlrcpp::Any MyExprVisitor::visitArrayIndexing(ExprParser::ArrayIndexingContext *ctx) {
     visit(ctx->variable());
     for (auto exprCtx : ctx->expression()) {
+        if (!symbolTable.isDeclared(exprCtx->getText())) {
+            std::cerr << "Error: Undeclared symbol " << exprCtx->getText() << " used." << std::endl;
+        }
         visit(exprCtx);
+    }
+    return nullptr;
+}
+
+
+antlrcpp::Any MyExprVisitor::visitVariable(ExprParser::VariableContext *ctx) {
+    std::string identifier = ctx->IDENTIFIER()->getText();
+
+    if (!symbolTable.isDeclared(identifier)) {
+        std::cerr << "Error: Undeclared symbol " << identifier << " used." << std::endl;
     }
     return nullptr;
 }
@@ -96,7 +113,11 @@ antlrcpp::Any MyExprVisitor::visitFunctionDeclaration(ExprParser::FunctionDeclar
     return nullptr;
 }
 
-
+antlrcpp::Any MyExprVisitor::visitAssignment(ExprParser::AssignmentContext *ctx) {
+    visit(ctx->variable());
+    visit(ctx->expression());
+    return nullptr;
+}
 
 antlrcpp::Any MyExprVisitor::visitTypeSpecification(ExprParser::TypeSpecificationContext *ctx) {
     if (ctx->ARRAY().size() == 1) {
